@@ -4,12 +4,21 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.core.paginator import Paginator
-from .models import Post
+from .models import Post, Like, Follower
+from django import forms
+from datetime import datetime
 
 # from requests import request
 from django.contrib.auth.decorators import login_required
 
 from .models import User
+
+class PostForm(forms.Form):
+    title = forms.CharField(label="Title", widget=forms.TextInput(
+        attrs={'class': 'form-control'}))
+    text = forms.CharField(label="Post", widget=forms.Textarea(
+        attrs={'class': 'form-control'}))
+
 
 def index(request):
     if request.user.is_authenticated:
@@ -78,16 +87,25 @@ def register(request):
     else:
         return render(request, "network/register.html")
 
+@login_required
 def newpost(request):
     if request.method == "POST":
         # create post
-        pass
+        postform = PostForm(request.POST)
+        if postform.is_valid():
+            text = postform.cleaned_data['text']
+            title = postform.cleaned_data['title']
+            user = request.user
+            time = datetime.now()
+        newpost = Post(text=text, title=title, user=user, time=time)
+        newpost.save()
+        return(redirect("profile"))
     else:
 
         return redirect(reverse("index"))
 
 
-
+@login_required
 def profile(request):
     if request.method == "POST":
         pass
@@ -96,14 +114,14 @@ def profile(request):
 
 
 
-
+@login_required
 def following(request):
     if request.method == "POST":
         pass
     else:
         pass
 
-
+@login_required
 def editapi(request):
     if request.method == "POST":
         pass

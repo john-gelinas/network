@@ -1,5 +1,5 @@
 {% extends "network/layout.html" %}
-
+{% load mathfilters %}
 {% block body %}
 
 {% if errortext %}
@@ -17,10 +17,9 @@
 <div class="p-2">
 
     TODO
-    {% for contact in page_obj %}
+    {% for post in page_obj %}
     {# Each "contact" is a Contact model object. #}
-    {{ contact.full_name|upper }}<br>
-    ...
+    {{ post.title }}
     {% endfor %}
 
 
@@ -44,7 +43,7 @@
 
             {% comment %} current page {% endcomment %}
             <li class="page-item"><a class="page-link"
-                    href="?page={{ page_obj.next_page_number - 1}}">{{ page_obj.next_page_number - 1}}</a></li>
+                    href="?page={{ page_obj.next_page_number|sub:1}}">{{ page_obj.next_page_number|sub:1}}</a></li>
 
             {% comment %} page after {% endcomment %}
             {% if page_obj.has_next %}
