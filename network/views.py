@@ -27,9 +27,8 @@ def index(request):
             return error(request, "Invalid Submission")
         else:
             posts = Post.objects.all()
-
-            paginator = Paginator(posts, 10) # Show 10 contacts per page.
-            page_number = request.GET.get('page')
+            paginator = Paginator(posts, 1) # Show 10 contacts per page.
+            page_number = request.GET.get('page') if request.GET.get('page') else 1
             page_obj = paginator.get_page(page_number)
             return render(request, "network/index.html", {'page_obj': page_obj})    
     else:
@@ -101,8 +100,9 @@ def newpost(request):
         newpost.save()
         return(redirect("profile"))
     else:
-
-        return redirect(reverse("index"))
+        return render(request, "network/newpost.html", {
+            "form": PostForm
+        })
 
 
 @login_required

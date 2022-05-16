@@ -11,6 +11,11 @@ class FollowerInline(admin.TabularInline):
     model = Follower
     fk_name = "following"
 
+class FollowingInline(admin.TabularInline):
+    model = Follower
+    fk_name = "follower"
+
+
 class PostAdmin(admin.ModelAdmin):
     model = Post
     list_display = ("title", "text", "user", "time", "get_likes")
@@ -37,7 +42,7 @@ class FollowerAdmin(admin.ModelAdmin):
     list_display = ("following", "follower")
 
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ("username", "get_followers", "get_posts")
+    list_display = ("username", "get_followers", "get_following", "get_posts")
 
     def get_posts(self, person):
         posts = person.post.values_list()
@@ -48,7 +53,13 @@ class PersonAdmin(admin.ModelAdmin):
         followers = person.following.values()
         return len(followers)
     get_followers.short_description = "Followers"
-    inlines = [FollowerInline]
+
+    def get_following(self, person):
+        following = person.follower.values()
+        return len(following)
+    get_following.short_description = "Following"
+    
+    inlines = [FollowerInline, FollowingInline]
 
 admin.site.register(Post, PostAdmin)
 admin.site.register(Like, LikeAdmin)

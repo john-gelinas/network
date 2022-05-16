@@ -1,5 +1,4 @@
 {% extends "network/layout.html" %}
-{% load mathfilters %}
 {% block body %}
 
 {% if errortext %}
@@ -15,36 +14,52 @@
 </div>
 {% endif %}
 <div class="p-2">
-
-    TODO
+    <a class="btn btn-outline-secondary m-2" href={% url "newpost" %}>New Post</a>
     {% for post in page_obj %}
-    {# Each "contact" is a Contact model object. #}
-    {{ post.title }}
+    <div class="m-2 b-1">
+        <div>
+            <h1>{{ post.title }}</h1>
+        </div>
+        <div>
+            <h5>{{ post.text }}</h5>
+        </div>
+
+    </div>
     {% endfor %}
 
-
-
+    {% comment %} Pagination {% endcomment %}
     <nav aria-label="Page navigation example">
-        <ul class="pagination">
+        <ul class="pagination justify-content-center">
             {% comment %} page before {% endcomment %}
             {% if page_obj.has_previous %}
             <li class="page-item">
                 <a class="page-link" href="?page=1" aria-label="Previous">
                     First
                 </a>
-                <a href="?page={{ page_obj.previous_page_number }}">
-                    &laquo;
-                    <span aria-hidden="true">previous</span>
+            </li>
+            <li>
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
             <li class="page-item"><a class="page-link"
                     href="?page={{ page_obj.previous_page_number}}">{{ page_obj.previous_page_number}}</a></li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="?page=1" aria-label="Previous">
+                    First
+                </a>
+            </li>
+            <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
             {% endif %}
 
             {% comment %} current page {% endcomment %}
-            <li class="page-item"><a class="page-link"
-                    href="?page={{ page_obj.next_page_number|sub:1}}">{{ page_obj.next_page_number|sub:1}}</a></li>
-
+            <li class="page-item active"><span class="page-link" href="#">{{ page_obj.number}}<span
+                        class="sr-only">(current)</span></span></li>
             {% comment %} page after {% endcomment %}
             {% if page_obj.has_next %}
             <li class="page-item"><a class="page-link"
@@ -53,8 +68,12 @@
             <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a></li>
-                <li class="page-item">...</li>
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+            {% else %}
+            <li class="page-item disabled"><a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a></li>
+            <li class="page-item disabled"><a class="page-link" href="#">Last</a></li>
             {% endif %}
 
         </ul>
