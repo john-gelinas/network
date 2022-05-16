@@ -7,11 +7,13 @@ from django.core.paginator import Paginator
 from .models import Post, Like, Follower
 from django import forms
 from datetime import datetime
+from django.http import JsonResponse
+import json
 
 # from requests import request
 from django.contrib.auth.decorators import login_required
 
-from .models import User
+from .models import User, Post, Like, Follower
 
 class PostForm(forms.Form):
     title = forms.CharField(label="Title", widget=forms.TextInput(
@@ -127,6 +129,43 @@ def editapi(request):
         pass
     else:
         pass
+
+@login_required
+def likeapi(request, post_id):
+    user = request.user
+    #  check for post
+    try:
+        post = Post.objects.get(pk=post_id)
+    except Post.DoesNotExist:
+        return JsonResponse({"error": "Post not found."}, status=404)
+    
+    # Return like status
+    if request.method == "GET":
+        try: 
+            like = Like.objects.get(post=post_id, user=user)
+            liked = True
+        except Like.DoesNotExist:
+            liked = False
+        total_likes = Like.objects.filter(post=post_id).count()
+        return JsonResponse({"liked": liked, "total_likes": total_likes}, status=200)
+
+    # Update whether post needs to be liked or unliked
+    elif request.method == "PUT":
+        data = json.loads(request.body)
+        if data.get("liked") == False:
+            post = Post.objects.get(pk=post_id)
+            like = Like(user = user, post = post)
+            like.save()
+        else:
+            Like.objects.filter(post=post_id, user=user).delete()
+        return HttpResponse(status=204)
+
+    # Email must be via GET or PUT
+    else:
+        return JsonResponse({
+            "error": "GET or PUT request required."
+        }, status=400)
+
 
 def error(request, errortext):
     return render(request, "network/index.html", {
