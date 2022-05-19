@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function liketoggle(event, csrftoken) {
     let heartid = event.target.id
-    console.log(event)
     try {
         postid = parseInt(heartid.slice(5))
     } catch (error) {
@@ -56,11 +55,11 @@ function update_likes(post_id, csrftoken) {
             let liked = like.liked
             likes_counter = document.querySelector(`#likes${post_id}`)
             likes_counter.innerHTML = `${totalLikes}`
-            console.log(likes_counter)
+            let heartsvg = document.getElementById(`heart${post_id}`)
             if (liked) {
-                let hearticon = document.getElementById(`heart${post_id}`).getElementsByClassName(`icon`)
-                console.log(hearticon[0])
-                hearticon[0].style.fill = "red"
+                heartsvg.style.color = "red"
+            } else {
+                heartsvg.style.color = "black"
             }
         })
 }

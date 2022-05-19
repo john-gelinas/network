@@ -15,19 +15,16 @@
     <p class="m-0 fst-italic">Head back to the <a href="/">homepage</a></p>
 </div>
 {% endif %}
-
 <div class="p-2">
     <a class="btn btn-outline-secondary m-2" href={% url "newpost" %}>New Post</a>
     {% for post in page_obj %}
     <div class="m-2 p-2 border border-2 border-info rounded-3">
         <div id="{{ post.id }}" class="post">
-            <h1>{{ post.title }}</h1>
-            {% comment %} like button {% endcomment %}
-            <svg width="40" height="40" id="heart{{ post.id }}" class="heart" >
-                <circle class="icon" cx="20" cy="20" r="10" stroke="black"
-                    stroke-width="1" style="fill: none"/>
-            </svg>
-            <p> Likes: <span id="likes{{ post.id }}" class="likes"></span>
+            <h1 class="h1 p-2 m-0">{{ post.title }}</h1>
+            <p class="h1 align-middle"> <span id="heart{{ post.id }}" class="heart h2"
+                    style="color: black">&hearts;</span>
+                <span class="align-middle h5">Likes:</span> <span id="likes{{ post.id }}"
+                    class="likes align-middle h5"></span></p>
         </div>
         <div>
             <h5>{{ post.text }}</h5>
