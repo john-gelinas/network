@@ -4,7 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
         heart.addEventListener('click', event => liketoggle(event, csrftoken))
     })
     document.querySelectorAll('.post').forEach(post => {
-        update_likes(post_id, csrftoken)
+        let id = post.id
+        update_likes(id, csrftoken)
     })
 
 })
@@ -12,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function liketoggle(event, csrftoken) {
     let heartid = event.target.id
+    console.log(event)
     try {
         postid = parseInt(heartid.slice(5))
     } catch (error) {
@@ -26,29 +28,18 @@ function liketoggle(event, csrftoken) {
         .then(response => response.json())
         // change like status via api
         .then(like => {
-            if (like.liked) {
-                fetch(`/likeapi/${postid}`, {
+            fetch(`/likeapi/${postid}`, {
                     method: 'PUT',
                     headers: {
                         'X-CSRFToken': csrftoken
                     },
                     body: JSON.stringify({
-                        liked: true
+                        liked: like.liked
                     })
                 })
-            } else {
-                fetch(`/likeapi/${postid}`, {
-                    method: 'PUT',
-                    headers: {
-                        'X-CSRFToken': csrftoken
-                    },
-                    body: JSON.stringify({
-                        liked: false
-                    })
-                })
-            }
+                .then(() => update_likes(postid, csrftoken))
         })
-        .then(() => update_likes(postid, csrftoken))
+
 }
 
 // change like button appearance and like count based on current status
@@ -65,9 +56,11 @@ function update_likes(post_id, csrftoken) {
             let liked = like.liked
             likes_counter = document.querySelector(`#likes${post_id}`)
             likes_counter.innerHTML = `${totalLikes}`
+            console.log(likes_counter)
             if (liked) {
-                let heart = document.getElementById(`heart${post_id}`).getElementsByClassName(`icon`)
-                heart.fill = "red"
+                let hearticon = document.getElementById(`heart${post_id}`).getElementsByClassName(`icon`)
+                console.log(hearticon[0])
+                hearticon[0].style.fill = "red"
             }
         })
 }

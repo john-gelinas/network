@@ -25,7 +25,7 @@
             {% comment %} like button {% endcomment %}
             <svg width="40" height="40" id="heart{{ post.id }}" class="heart" >
                 <circle class="icon" cx="20" cy="20" r="10" stroke="black"
-                    stroke-width="1" fill="none" />
+                    stroke-width="1" style="fill: none"/>
             </svg>
             <p> Likes: <span id="likes{{ post.id }}" class="likes"></span>
         </div>
@@ -42,7 +42,7 @@
 
     {% comment %} Pagination {% endcomment %}
     <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
+        <ol class="pagination justify-content-center">
             {% comment %} page before {% endcomment %}
             {% if page_obj.has_previous %}
             <li class="page-item">
@@ -89,7 +89,7 @@
             <li class="page-item disabled"><a class="page-link" href="#">Last</a></li>
             {% endif %}
 
-        </ul>
+        </ol>
     </nav>
 
 </div>
