@@ -28,8 +28,8 @@ def index(request):
             # throw error if post
             return error(request, "Invalid Submission")
         else:
-            posts = Post.objects.all()
-            paginator = Paginator(posts, 1).order_by('-time') # Show 10 contacts per page.
+            posts = Post.objects.all().order_by('-time')
+            paginator = Paginator(posts, 1) # Show 10 contacts per page.
             page_number = request.GET.get('page') if request.GET.get('page') else 1
             page_obj = paginator.get_page(page_number)
             return render(request, "network/index.html", {'page_obj': page_obj})    
@@ -106,7 +106,6 @@ def newpost(request):
             "form": PostForm
         })
 
-
 def profile(request, profile):
     if request.user.is_authenticated:
         user = request.user
@@ -119,14 +118,24 @@ def profile(request, profile):
             page_number = request.GET.get('page') if request.GET.get('page') else 1
             page_obj = paginator.get_page(page_number)
             profile = User.objects.get(id=profile)
-            following = len(Follower.objects.filter(following=user))
-            followers = len(Follower.objects.filter(follower=user))
-
+            following = len(Follower.objects.filter(follower=profile))
+            followers = len(Follower.objects.filter(following=profile))
+            user_following = len(Follower.objects.filter(following=user))
+            # check if profile is user's
+            if user == profile:
+                button = None
+            else:
+                # check if user is following profile
+                if user_following:
+                    button = "Unfollow"
+                else:
+                    button = "Follow"
             return render(request, "network/index.html", {
                 'page_obj': page_obj,
                 'followers': followers,
                 'following': following,
-                'profile': profile
+                'profile': profile,
+                'button': button
                 })    
     else:
         return redirect(reverse("login"))
