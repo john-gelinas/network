@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
         let id = post.id
         update_likes(id, csrftoken)
     })
-
 })
 
 

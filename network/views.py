@@ -29,7 +29,7 @@ def index(request):
             return error(request, "Invalid Submission")
         else:
             posts = Post.objects.all()
-            paginator = Paginator(posts, 1) # Show 10 contacts per page.
+            paginator = Paginator(posts, 1).order_by('-time') # Show 10 contacts per page.
             page_number = request.GET.get('page') if request.GET.get('page') else 1
             page_obj = paginator.get_page(page_number)
             return render(request, "network/index.html", {'page_obj': page_obj})    
@@ -107,12 +107,29 @@ def newpost(request):
         })
 
 
-@login_required
-def profile(request):
-    if request.method == "POST":
-        pass
+def profile(request, profile):
+    if request.user.is_authenticated:
+        user = request.user
+        if request.method == "POST":
+            # throw error if post
+            return error(request, "Invalid Submission")
+        else:
+            posts = Post.objects.filter(user=profile).order_by('-time')
+            paginator = Paginator(posts, 1) # Show 10 contacts per page.
+            page_number = request.GET.get('page') if request.GET.get('page') else 1
+            page_obj = paginator.get_page(page_number)
+            profile = User.objects.get(id=profile)
+            following = len(Follower.objects.filter(following=user))
+            followers = len(Follower.objects.filter(follower=user))
+
+            return render(request, "network/index.html", {
+                'page_obj': page_obj,
+                'followers': followers,
+                'following': following,
+                'profile': profile
+                })    
     else:
-        pass
+        return redirect(reverse("login"))
 
 
 
@@ -153,10 +170,16 @@ def likeapi(request, post_id):
     elif request.method == "PUT":
         data = json.loads(request.body)
         if data.get("liked") == False:
+            # check if like already exists despite client reporting that new like should be added
+            # status 429 - too many requests (rapidly clicking like button)
+            if Like.objects.filter(post=post_id, user=user).count() != 0:
+                return HttpResponse(status=429)
+            # add new like
             post = Post.objects.get(pk=post_id)
             like = Like(user = user, post = post)
             like.save()
         else:
+            # delete like
             Like.objects.filter(post=post_id, user=user).delete()
         return HttpResponse(status=204)
 

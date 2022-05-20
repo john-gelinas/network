@@ -17,13 +17,23 @@
 {% endif %}
 <div class="p-2">
     <a class="btn btn-outline-secondary m-2" href={% url "newpost" %}>New Post</a>
+    {% if profile %}
+    <div>Profile: {{ profile }}</div>
+    {% endif %}
+    {% if followers or followers == 0 %}
+    <div>Followers: {{ followers }}</div>
+    {% endif %}
+    {% if following or following == 0 %}
+    <div>Following: {{ following }}</div>
+    {% endif %}
+
     {% for post in page_obj %}
     <div class="m-2 p-2 border border-2 border-info rounded-3">
         <div id="{{ post.id }}" class="post">
             <h1 class="h1 ps-2 pt-2 m-0">{{ post.title }}</h1>
             <p class="lead ps-2" style="font-size: 20px"> @{{ post.user }}</p>
-            <p class="h1 align-middle"> <span id="heart{{ post.id }}" class="heart h2"
-                    style="color: black">&hearts;</span>
+            <p class="h1 align-middle"> <a style="text-decoration-line: none" href="#" id="heart{{ post.id }}" class="heart h2"
+                    style="color: black">&hearts;</a>
                 <span class="align-middle h5">Likes:</span> <span id="likes{{ post.id }}"
                     class="likes align-middle h5"></span></p>
         </div>
