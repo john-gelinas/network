@@ -123,13 +123,9 @@ def profile(request, profile):
             user_following = len(Follower.objects.filter(following=user))
             # check if profile is user's
             if user == profile:
-                button = None
+                button = False
             else:
-                # check if user is following profile
-                if user_following:
-                    button = "Unfollow"
-                else:
-                    button = "Follow"
+                button = True
             return render(request, "network/index.html", {
                 'page_obj': page_obj,
                 'followers': followers,
@@ -140,14 +136,50 @@ def profile(request, profile):
     else:
         return redirect(reverse("login"))
 
-
+def following():
+    pass
 
 @login_required
-def following(request):
-    if request.method == "POST":
-        pass
+def followapi(request, profile_id):
+    user = request.user
+    #  check for profile
+    try:
+        profile = User.objects.get(pk=profile_id)
+    except User.DoesNotExist:
+        return JsonResponse({"error": "Profile not found."}, status=404)
+    
+    # Return follow status
+    if request.method == "GET":
+        try:
+            follow = Follower.objects.get(following=profile_id, follower=user)
+            follow = True
+        except Follower.DoesNotExist:
+            follow = False
+        return JsonResponse({"follow": follow}, status=200)
+
+    # Update whether follow need to be true or false
+    elif request.method == "PUT":
+        data = json.loads(request.body)
+        if data.get("follow") == False:
+            # check if follow already exists despite client reporting that new follower should be added
+            # status 429 - too many requests (rapidly clicking follow button)
+            if Follower.objects.filter(following=profile_id, follower=user).count() != 0:
+                return HttpResponse(status=429)
+            # add new follow
+            follower = user
+            following = User.objects.get(pk=profile_id)
+            follow = Follower(follower=follower, following=following)
+            follow.save()
+        else:
+            # delete follow (unfollow profile)
+            Follower.objects.filter(following=profile_id, follower=user).delete()
+        return HttpResponse(status=204)
+
+    # Email must be via GET or PUT
     else:
-        pass
+        return JsonResponse({
+            "error": "GET or PUT request required."
+        }, status=400)
 
 @login_required
 def editapi(request):

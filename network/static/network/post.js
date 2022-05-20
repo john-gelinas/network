@@ -7,6 +7,10 @@ document.addEventListener("DOMContentLoaded", () => {
         let id = post.id
         update_likes(id, csrftoken)
     })
+    if (document.querySelector('#follower')) {
+        followBtn = document.querySelector('#follower')
+        followBtn.addEventListener('click', event => followToggle(event, csrftoken))
+    }
 })
 
 
@@ -61,4 +65,9 @@ function update_likes(post_id, csrftoken) {
                 heartsvg.style.color = "black"
             }
         })
+}
+
+function followToggle(event, csrftoken) {
+    let followid = event.target.id
+    
 }

@@ -26,6 +26,9 @@
     {% if following or following == 0 %}
     <div>Following: {{ following }}</div>
     {% endif %}
+    {% if button %}
+    <button class="btn btn-primary" id="follow"></button>
+    {% endif %}
 
     {% for post in page_obj %}
     <div class="m-2 p-2 border border-2 border-info rounded-3">
