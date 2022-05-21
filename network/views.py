@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 
 from .models import User, Post, Like, Follower
 
+
 class PostForm(forms.Form):
     title = forms.CharField(label="Title", widget=forms.TextInput(
         attrs={'class': 'form-control'}))
@@ -29,10 +30,11 @@ def index(request):
             return error(request, "Invalid Submission")
         else:
             posts = Post.objects.all().order_by('-time')
-            paginator = Paginator(posts, 1) # Show 10 contacts per page.
-            page_number = request.GET.get('page') if request.GET.get('page') else 1
+            paginator = Paginator(posts, 1)  # Show 10 contacts per page.
+            page_number = request.GET.get(
+                'page') if request.GET.get('page') else 1
             page_obj = paginator.get_page(page_number)
-            return render(request, "network/index.html", {'page_obj': page_obj})    
+            return render(request, "network/index.html", {'page_obj': page_obj})
     else:
         return redirect(reverse("login"))
 
@@ -88,6 +90,7 @@ def register(request):
     else:
         return render(request, "network/register.html")
 
+
 @login_required
 def newpost(request):
     if request.method == "POST":
@@ -106,18 +109,20 @@ def newpost(request):
             "form": PostForm
         })
 
-def profile(request, profile):
+
+def profile(request, profile_id):
     if request.user.is_authenticated:
         user = request.user
         if request.method == "POST":
             # throw error if post
             return error(request, "Invalid Submission")
         else:
-            posts = Post.objects.filter(user=profile).order_by('-time')
-            paginator = Paginator(posts, 1) # Show 10 contacts per page.
-            page_number = request.GET.get('page') if request.GET.get('page') else 1
+            posts = Post.objects.filter(user=profile_id).order_by('-time')
+            paginator = Paginator(posts, 1)  # Show 10 contacts per page.
+            page_number = request.GET.get(
+                'page') if request.GET.get('page') else 1
             page_obj = paginator.get_page(page_number)
-            profile = User.objects.get(id=profile)
+            profile = User.objects.get(id=profile_id)
             following = len(Follower.objects.filter(follower=profile))
             followers = len(Follower.objects.filter(following=profile))
             user_following = len(Follower.objects.filter(following=user))
@@ -131,48 +136,80 @@ def profile(request, profile):
                 'followers': followers,
                 'following': following,
                 'profile': profile,
-                'button': button
-                })    
+                'button': button,
+                'profile_id': profile_id,
+                'user_following': user_following
+            })
     else:
         return redirect(reverse("login"))
 
-def following():
-    pass
+
+def following(request):
+    if request.user.is_authenticated:
+        user = request.user
+        if request.method == "POST":
+            # throw error if post
+            return error(request, "Invalid Submission")
+        else:
+            following_object_list = Follower.objects.filter(follower=user).values()
+            for follow in following_object_list:
+                
+            print(following_object_list)
+            posts = Post.objects.filter().order_by('-time')
+            paginator = Paginator(posts, 1)  # Show 10 contacts per page.
+            page_number = request.GET.get(
+                'page') if request.GET.get('page') else 1
+            page_obj = paginator.get_page(page_number)
+            return render(request, "network/index.html", {'page_obj': page_obj})
+    else:
+        return redirect(reverse("login"))
+
 
 @login_required
-def followapi(request, profile_id):
+def followapi(request, follow_id):
     user = request.user
     #  check for profile
     try:
-        profile = User.objects.get(pk=profile_id)
+        profile = User.objects.get(pk=follow_id)
     except User.DoesNotExist:
         return JsonResponse({"error": "Profile not found."}, status=404)
-    
+
     # Return follow status
     if request.method == "GET":
         try:
-            follow = Follower.objects.get(following=profile_id, follower=user)
+            follow = Follower.objects.get(following=follow_id, follower=user)
             follow = True
         except Follower.DoesNotExist:
             follow = False
-        return JsonResponse({"follow": follow}, status=200)
+        profile = User.objects.get(id=follow_id)
+        following = len(Follower.objects.filter(follower=profile))
+        followers = len(Follower.objects.filter(following=profile))        
+        return JsonResponse({
+            "follow": follow,
+            "followers": followers,
+            "following": following
+            }, status=200)
 
     # Update whether follow need to be true or false
     elif request.method == "PUT":
         data = json.loads(request.body)
-        if data.get("follow") == False:
+        if data.get("following") == False:
             # check if follow already exists despite client reporting that new follower should be added
             # status 429 - too many requests (rapidly clicking follow button)
-            if Follower.objects.filter(following=profile_id, follower=user).count() != 0:
+            if Follower.objects.filter(following=follow_id, follower=user.id).count() != 0:
                 return HttpResponse(status=429)
+            # user cannot follow themselves
+            if follow_id == user.id:
+                return HttpResponse(status=400)
             # add new follow
             follower = user
-            following = User.objects.get(pk=profile_id)
+            following = User.objects.get(pk=follow_id)
             follow = Follower(follower=follower, following=following)
             follow.save()
         else:
             # delete follow (unfollow profile)
-            Follower.objects.filter(following=profile_id, follower=user).delete()
+            Follower.objects.filter(
+                following=follow_id, follower=user).delete()
         return HttpResponse(status=204)
 
     # Email must be via GET or PUT
@@ -181,12 +218,14 @@ def followapi(request, profile_id):
             "error": "GET or PUT request required."
         }, status=400)
 
+
 @login_required
 def editapi(request):
     if request.method == "POST":
         pass
     else:
         pass
+
 
 @login_required
 def likeapi(request, post_id):
@@ -196,10 +235,10 @@ def likeapi(request, post_id):
         post = Post.objects.get(pk=post_id)
     except Post.DoesNotExist:
         return JsonResponse({"error": "Post not found."}, status=404)
-    
+
     # Return like status
     if request.method == "GET":
-        try: 
+        try:
             like = Like.objects.get(post=post_id, user=user)
             liked = True
         except Like.DoesNotExist:
@@ -217,7 +256,7 @@ def likeapi(request, post_id):
                 return HttpResponse(status=429)
             # add new like
             post = Post.objects.get(pk=post_id)
-            like = Like(user = user, post = post)
+            like = Like(user=user, post=post)
             like.save()
         else:
             # delete like

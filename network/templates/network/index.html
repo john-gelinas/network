@@ -21,13 +21,17 @@
     <div>Profile: {{ profile }}</div>
     {% endif %}
     {% if followers or followers == 0 %}
-    <div>Followers: {{ followers }}</div>
+    <div>
+        <span>Followers: </span><span id="followers{{profile_id}}">{{ followers }}</span>
+    </div>
     {% endif %}
     {% if following or following == 0 %}
-    <div>Following: {{ following }}</div>
+    <div>
+        <span>Following: </span><span id="following{{profile_id}}">Following: {{ following }}</span>
+    </div>
     {% endif %}
     {% if button %}
-    <button class="btn btn-primary" id="follow"></button>
+    <button class="follow btn btn-primary" id="follow{{ profile_id }}"></button>
     {% endif %}
 
     {% for post in page_obj %}
@@ -35,8 +39,8 @@
         <div id="{{ post.id }}" class="post">
             <h1 class="h1 ps-2 pt-2 m-0">{{ post.title }}</h1>
             <p class="lead ps-2" style="font-size: 20px"> @{{ post.user }}</p>
-            <p class="h1 align-middle"> <a style="text-decoration-line: none" href="#" id="heart{{ post.id }}" class="heart h2"
-                    style="color: black">&hearts;</a>
+            <p class="h1 align-middle"> <a style="text-decoration-line: none" href="#" id="heart{{ post.id }}"
+                    class="heart h2" style="color: black">&hearts;</a>
                 <span class="align-middle h5">Likes:</span> <span id="likes{{ post.id }}"
                     class="likes align-middle h5"></span></p>
         </div>
