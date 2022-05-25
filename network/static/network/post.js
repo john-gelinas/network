@@ -7,6 +7,15 @@ document.addEventListener("DOMContentLoaded", () => {
         let id = post.id
         update_likes(id, csrftoken)
     })
+    document.querySelectorAll('.postbutton').forEach(post => {
+        post.addEventListener('click', event => editpost(event, csrftoken))
+    })
+    document.querySelectorAll('.editbutton').forEach(button => {
+        button.addEventListener('click', event => toggleedit(event))
+    })
+    document.querySelectorAll('.deletebutton').forEach(button => {
+        button.addEventListener('click', event => deletepost(event, csrftoken))
+    })
     if (document.querySelector('.follow')) {
         followBtn = document.querySelector('.follow')
         followBtn.addEventListener('click', event => followToggle(event, csrftoken))
@@ -129,7 +138,75 @@ function update_follow(follow_id, csrftoken) {
             } else {
                 button.innerHTML = "Follow"
                 button.classList.add("btn-primary")
-                button.classList.remove("btn-secondary")                
+                button.classList.remove("btn-secondary")
             }
+        })
+}
+
+
+function editpost(event, csrftoken) {
+    let savebuttonid = event.target.id
+    try {
+        postid = parseInt(savebuttonid.slice(10))
+    } catch (error) {
+        console.log(error)
+    }
+    posttext = 
+    fetch(`/editapi/${postid}/${postext}`, {
+            headers: {
+                method: 'PUT',
+                'X-CSRFToken': csrftoken,
+            }
+        })
+        .then(response => response.json())
+        // remove html div for post
+        .then(deletejson => {
+            let post_id_delete = deletejson.deleted
+            post = document.getElementById(`post${post_id_delete}`)
+            post.remove()
+        })
+}
+
+function toggleedit(event) {
+    console.log(event)
+    let posteditid = event.target.id
+    try {
+        postid = parseInt(posteditid.slice(4))
+    } catch (error) {
+        console.log(error)
+    }
+    postdiv = document.getElementById(`editform${postid}`)
+    console.log(postdiv.style.display)
+
+    if (postdiv.style.display === "none") {
+        postdiv.style.display = "block"
+    } else {
+        postdiv.style.display = "none"
+    }
+}
+
+
+function deletepost(event, csrftoken) {
+    let deletebuttonid = event.target.id
+    try {
+        postid = parseInt(deletebuttonid.slice(6))
+    } catch (error) {
+        console.log(error)
+    }
+    fetch(`/editapi`, {
+            headers: {
+                method: 'PUT',
+                'X-CSRFToken': csrftoken,
+                body: JSON.stringify({
+                    post_id: postid
+                })
+            }
+        })
+        .then(response => response.json())
+        // remove html div for post
+        .then(deletejson => {
+            let post_id_delete = deletejson.deleted
+            post = document.getElementById(`post${post_id_delete}`)
+            post.remove()
         })
 }
