@@ -35,17 +35,28 @@
     {% endif %}
 
     {% for post in page_obj %}
-    <div class="m-2 p-2 border border-2 border-info rounded-3">
+    <div id="post{{ post.id }}" class="m-2 p-2 border border-2 border-info rounded-3">
         <div id="{{ post.id }}" class="post">
             <h1 class="h1 ps-2 pt-2 m-0">{{ post.title }}</h1>
-            <p class="lead ps-2" style="font-size: 20px"> @{{ post.user }}</p>
+            <p class="lead ps-2" style="font-size: 20px"><a class="username" href={% url "profile" post.user.id %}>
+                    @{{ post.user }}</a></p>
             <p class="h1 align-middle"> <a style="text-decoration-line: none" href="#" id="heart{{ post.id }}"
                     class="heart h2" style="color: black">&hearts;</a>
                 <span class="align-middle h5">Likes:</span> <span id="likes{{ post.id }}"
                     class="likes align-middle h5"></span></p>
         </div>
         <div>
-            <h5>{{ post.text }}</h5>
+            <h5 id="posttext{{post.id}}">{{ post.text }}</h5>
+            {% if post.edited %} <h6 style="font-style: italic">Edited</h6> {% endif %}
+            {% if post.user.id == user.id %}
+            <button id="edit{{ post.id }}" class="editbutton btn btn-outline-secondary p-2">Edit</button>
+            <button id="delete{{ post.id }}" class="deletebutton btn btn-outline-secondary p-2">Delete</button>
+            <div id="editform{{ post.id }}" class="p-2" style="display: none">
+                <textarea class="form-control mb-1" id="posteditfield{{post.id}}">{{ post.text }}</textarea>
+                <button type="hidden" class="postbutton{{ post.id }} btn btn-outline-secondary">Save</button>
+            </div>
+
+            {% endif %}
         </div>
         <div>
             <h6>{{ post.time }}</h5>

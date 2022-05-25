@@ -1,3 +1,4 @@
+import re
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -30,7 +31,7 @@ def index(request):
             return error(request, "Invalid Submission")
         else:
             posts = Post.objects.all().order_by('-time')
-            paginator = Paginator(posts, 1)  # Show 10 contacts per page.
+            paginator = Paginator(posts, 10)  # Show 10 contacts per page.
             page_number = request.GET.get(
                 'page') if request.GET.get('page') else 1
             page_obj = paginator.get_page(page_number)
@@ -151,12 +152,15 @@ def following(request):
             # throw error if post
             return error(request, "Invalid Submission")
         else:
-            following_object_list = Follower.objects.filter(follower=user).values()
-            for follow in following_object_list:
-                
-            print(following_object_list)
-            posts = Post.objects.filter().order_by('-time')
-            paginator = Paginator(posts, 1)  # Show 10 contacts per page.
+            # get profiles user is following from list of following objects
+            following_id_list = Follower.objects.filter(
+                follower=user).values('following_id')
+            following_user_list = User.objects.filter(
+                id__in=following_id_list).values('id')
+            # get posts of profiles user is following
+            posts = Post.objects.filter(
+                user__in=following_user_list).order_by('-time')
+            paginator = Paginator(posts, 10)  # Show 10 contacts per page.
             page_number = request.GET.get(
                 'page') if request.GET.get('page') else 1
             page_obj = paginator.get_page(page_number)
@@ -183,12 +187,12 @@ def followapi(request, follow_id):
             follow = False
         profile = User.objects.get(id=follow_id)
         following = len(Follower.objects.filter(follower=profile))
-        followers = len(Follower.objects.filter(following=profile))        
+        followers = len(Follower.objects.filter(following=profile))
         return JsonResponse({
             "follow": follow,
             "followers": followers,
             "following": following
-            }, status=200)
+        }, status=200)
 
     # Update whether follow need to be true or false
     elif request.method == "PUT":
@@ -221,10 +225,28 @@ def followapi(request, follow_id):
 
 @login_required
 def editapi(request):
+    user = request.user
+    data = json.loads(request.body)
+    
+    #  check for post
+    try:
+        post_id = data.get("post_id")
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return error(request, "404: Post Not Found", 404)
+    if post.user != user:
+        return error(request, "incorrect account to edit this post", 401)
+    print(request.method)
+    # if put request, delete post
+    if request.method == "PUT":
+        post.delete()
+        print(post_id)
+        return JsonResponse({"deleted": post_id}, status=200)
+    # if post request, edit post text and update time
     if request.method == "POST":
         pass
     else:
-        pass
+        return redirect(reverse("index"))
 
 
 @login_required
@@ -234,7 +256,7 @@ def likeapi(request, post_id):
     try:
         post = Post.objects.get(pk=post_id)
     except Post.DoesNotExist:
-        return JsonResponse({"error": "Post not found."}, status=404)
+        return error(request, "404: Post not found.", 404)
 
     # Return like status
     if request.method == "GET":
@@ -265,12 +287,12 @@ def likeapi(request, post_id):
 
     # Email must be via GET or PUT
     else:
-        return JsonResponse({
-            "error": "GET or PUT request required."
-        }, status=400)
+        return error(request, "GET or PUT request required.", 400)
 
 
-def error(request, errortext):
+def error(request, errortext, status):
     return render(request, "network/index.html", {
         "errortext": errortext
-    })
+    },
+        status
+    )
