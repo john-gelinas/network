@@ -7,8 +7,12 @@ document.addEventListener("DOMContentLoaded", () => {
         let id = post.id
         update_likes(id, csrftoken)
     })
-    document.querySelectorAll('.postbutton').forEach(post => {
-        post.addEventListener('click', event => editpost(event, csrftoken))
+    document.querySelectorAll('.editform').forEach(post => {
+        post.onsubmit = event => {
+            event.preventDefault()
+            editpost(event, csrftoken)
+            return false
+        }
     })
     document.querySelectorAll('.editbutton').forEach(button => {
         button.addEventListener('click', event => toggleedit(event))
@@ -145,30 +149,35 @@ function update_follow(follow_id, csrftoken) {
 
 
 function editpost(event, csrftoken) {
-    let savebuttonid = event.target.id
-    try {
-        postid = parseInt(savebuttonid.slice(10))
-    } catch (error) {
-        console.log(error)
-    }
-    posttext = 
-    fetch(`/editapi/${postid}/${postext}`, {
+    console.log(event)
+    event.preventDefault()
+    let form = event.target
+    let posttextbox = form.children[0]
+    console.log(posttextbox)
+    let posttext = posttextbox.value
+    fetch(`/editapi`, {
+            method: 'POST',
             headers: {
-                method: 'PUT',
                 'X-CSRFToken': csrftoken,
-            }
+            },
+            body: JSON.stringify({
+                post_id: postid,
+                posttext: posttext
+            })
         })
         .then(response => response.json())
         // remove html div for post
-        .then(deletejson => {
-            let post_id_delete = deletejson.deleted
-            post = document.getElementById(`post${post_id_delete}`)
-            post.remove()
+        .then(data => {
+            let post_id = data.post_id
+            posttext = document.getElementById(`posttext${post_id}`)
+            posttext.innerHTML = data.post_text
+            edited = document.getElementById(`edited${post_id}`)
+            edited.innerHTML = "Edited"
         })
+        return false
 }
 
 function toggleedit(event) {
-    console.log(event)
     let posteditid = event.target.id
     try {
         postid = parseInt(posteditid.slice(4))
@@ -176,8 +185,6 @@ function toggleedit(event) {
         console.log(error)
     }
     postdiv = document.getElementById(`editform${postid}`)
-    console.log(postdiv.style.display)
-
     if (postdiv.style.display === "none") {
         postdiv.style.display = "block"
     } else {
@@ -194,18 +201,19 @@ function deletepost(event, csrftoken) {
         console.log(error)
     }
     fetch(`/editapi`, {
+            method: 'PUT',
             headers: {
-                method: 'PUT',
                 'X-CSRFToken': csrftoken,
-                body: JSON.stringify({
-                    post_id: postid
-                })
-            }
+            },
+            body: JSON.stringify({
+                post_id: postid
+            })
+
         })
         .then(response => response.json())
         // remove html div for post
         .then(deletejson => {
-            let post_id_delete = deletejson.deleted
+            let post_id_delete = deletejson['deleted']
             post = document.getElementById(`post${post_id_delete}`)
             post.remove()
         })

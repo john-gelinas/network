@@ -9,5 +9,9 @@
 
 .username:hover {
     text-decoration-line: none;
-    color: rgb(42, 220, 248);
+    font-weight: bold;
+}
+
+.post {
+    background-color: aliceblue;
 }

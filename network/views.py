@@ -101,10 +101,12 @@ def newpost(request):
             text = postform.cleaned_data['text']
             title = postform.cleaned_data['title']
             user = request.user
+            edited = False
             time = datetime.now()
-        newpost = Post(text=text, title=title, user=user, time=time)
+        newpost = Post(text=text, title=title, user=user,
+                       time=time, edited=edited)
         newpost.save()
-        return(redirect("profile"))
+        return(redirect("profile", profile_id=user.id))
     else:
         return render(request, "network/newpost.html", {
             "form": PostForm
@@ -227,7 +229,6 @@ def followapi(request, follow_id):
 def editapi(request):
     user = request.user
     data = json.loads(request.body)
-    
     #  check for post
     try:
         post_id = data.get("post_id")
@@ -236,7 +237,6 @@ def editapi(request):
         return error(request, "404: Post Not Found", 404)
     if post.user != user:
         return error(request, "incorrect account to edit this post", 401)
-    print(request.method)
     # if put request, delete post
     if request.method == "PUT":
         post.delete()
@@ -244,7 +244,14 @@ def editapi(request):
         return JsonResponse({"deleted": post_id}, status=200)
     # if post request, edit post text and update time
     if request.method == "POST":
-        pass
+        post_text = data.get("posttext")
+        post.text = post_text
+        post.edited = True
+        post.save()
+        return JsonResponse({
+            "post_id": post_id,
+            "post_text": post_text
+        }, status=200)
     else:
         return redirect(reverse("index"))
 
