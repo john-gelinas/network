@@ -1,3 +1,10 @@
+@font-face {
+    font-family: titlefont;
+    src: url('OpenSans-Regular.ttf');
+  }
+
+
+
 .follow {
     border: None !important;
 }
@@ -13,5 +20,20 @@
 }
 
 .post {
-    background-color: aliceblue;
+    background-color: rgb(237, 237, 237);
+    border: 2px solid;
+    border-radius: 3px;
+    border-color: rgb(155, 155, 155);
+}
+
+.posttitlebox {
+    background-color: rgb(158, 210, 252);
+    border-bottom: 2px;
+    border-bottom-style: solid;
+    border-bottom-color: rgb(104, 104, 92);
+}
+
+.posttitle {
+    /* font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+    font-family: titlefont, Helvetica, sans-serif;
 }
