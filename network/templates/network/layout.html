@@ -22,17 +22,18 @@
 
     <body>
         {% csrf_token %}
-        <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+        <nav class="navbar d-flex sticky-top navbar-expand-lg navbar-dark bg-dark justify-content-center">
 
             <a class="navbar-brand align-middle" href="{% url 'index' %}"><img class="m-2"
                     src="{% static 'network/favicon.ico' %}" width="20" height="20" alt=""><span
                     class="align-middle">Network</span></a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
+            <div class="collapse navbar-collapse flex-grow-0" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto">
                     {% if user.is_authenticated %}
                     <li class="nav-item" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Your Profile">
                         <a class="nav-link" href={% url "profile" user.id %}><strong>{{ user.username }}</strong></a>
