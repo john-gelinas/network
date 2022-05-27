@@ -37,21 +37,24 @@
     {% for post in page_obj %}
     <div id="{{ post.id }}" class="post m-2">
         <div class="posttitlebox">
-            <h1 class="h1 posttitle ps-2 m-0 d-flex align-items-center">{{ post.title }}<span class="h1 m-0"> <a style="text-decoration-line: none" href="#" id="heart{{ post.id }}"
-                class="heart h2 m-3" style="color: black">&hearts;</a><span class="align-middle h5">Likes:</span><span class="align-middle m-2 h5" id="likes{{ post.id }}"
-                class="likes align-middle h5"></span></span><span class="lead ps-2 pt-2 align-bottom" style="font-size: 20px"><a class="username align-bottom" href={% url "profile" post.user.id %}>
-                    @{{ post.user }}</a></span></h1>
-            
+            <h1 class="h1 posttitle ps-2 m-0 d-flex align-items-center">{{ post.title }}<span class="h1 m-0"> <a
+                        href="#" id="heart{{ post.id }}" class="heart h2 m-3">&hearts;</a><span
+                        class="align-middle h5">Likes:</span><span class="align-middle m-2 h5" id="likes{{ post.id }}"
+                        class="likes align-middle h5"></span></span><span class="lead ps-2 pt-2 align-bottom"
+                    style="font-size: 20px"><a class="username align-bottom" href={% url "profile" post.user.id %}>
+                        @{{ post.user }}</a></span></h1>
+
         </div>
         <div class="m-2">
             <h5 id="posttext{{post.id}}">{{ post.text }}</h5>
-            <h6 id="edited{{ post.id }}" style="font-style: italic">{% if post.edited %} Edited{% endif %}</h6> 
+            <h6 id="edited{{ post.id }}" style="font-style: italic">{% if post.edited %} Edited{% endif %}</h6>
             {% if post.user.id == user.id %}
             <button id="edit{{ post.id }}" class="editbutton btn btn-outline-secondary p-2">Edit</button>
             <button id="delete{{ post.id }}" class="deletebutton btn btn-outline-secondary p-2">Delete</button>
             <form id="editform{{ post.id }}" class="editform p-2" style="display: none">
                 <textarea class="form-control mb-1" id="posteditfield{{post.id}}">{{ post.text }}</textarea>
-                <button type="submit" id="postbutton{{ post.id }}" class="postbutton btn btn-outline-secondary">Save</button>
+                <button type="submit" id="postbutton{{ post.id }}"
+                    class="postbutton btn btn-outline-secondary">Save</button>
             </form>
 
             {% endif %}
