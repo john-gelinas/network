@@ -16,23 +16,27 @@
 </div>
 {% endif %}
 <div class="p-2">
-    <a class="btn btn-outline-secondary m-2" href={% url "newpost" %}>New Post</a>
-    {% if profile %}
-    <div>Profile: {{ profile }}</div>
-    {% endif %}
-    {% if followers or followers == 0 %}
-    <div>
-        <span>Followers: </span><span id="followers{{profile_id}}">{{ followers }}</span>
+    <div class="d-flex justify-content-center">
+        <a class="btn btn-outline-secondary m-2" href={% url "newpost" %}>New Post</a>
     </div>
-    {% endif %}
-    {% if following or following == 0 %}
-    <div>
-        <span>Following: </span><span id="following{{profile_id}}">Following: {{ following }}</span>
+    <div class="profilediv d-flex flex-column align-items-center">
+        {% if profile %}
+        <div class="profilename display-2">{{ profile }}</div>
+        {% endif %}
+        {% if followers or followers == 0 %}
+        <div class="followtext h4">
+            <span>Followers: </span><span id="followers{{profile_id}}">{{ followers }}</span>
+        </div>
+        {% endif %}
+        {% if following or following == 0 %}
+        <div class="followtext h4">
+            <span>Following: </span><span id="following{{profile_id}}">{{ following }}</span>
+        </div>
+        {% endif %}
+        {% if button %}
+        <button class="follow btn btn-primary" id="follow{{ profile_id }}"></button>
+        {% endif %}
     </div>
-    {% endif %}
-    {% if button %}
-    <button class="follow btn btn-primary" id="follow{{ profile_id }}"></button>
-    {% endif %}
 
     {% for post in page_obj %}
     <div id="{{ post.id }}" class="post m-2">
