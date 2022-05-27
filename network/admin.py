@@ -18,7 +18,7 @@ class FollowingInline(admin.TabularInline):
 
 class PostAdmin(admin.ModelAdmin):
     model = Post
-    list_display = ("title", "text", "user", "time", "get_likes")
+    list_display = ("title", "text", "user", "time", "edited", "get_likes")
     # get the likes associated post object
     def get_likes(self, post):
         # get list of likes associated with the post, then count

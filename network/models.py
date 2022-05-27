@@ -15,6 +15,7 @@ class Post(models.Model):
         related_name="post"
     )
     time = models.DateTimeField()
+    edited = models.BooleanField()
 
 
 class Like(models.Model):
