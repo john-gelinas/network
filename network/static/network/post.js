@@ -81,7 +81,7 @@ function update_likes(post_id, csrftoken) {
             if (liked) {
                 heartsvg.style.color = "red"
             } else {
-                heartsvg.style.color = "black"
+                heartsvg.style.color = "#00aaff"
             }
         })
 }
