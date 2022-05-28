@@ -1,0 +1,68 @@
+// Custom.scss
+// this file is used to adjust bootstrap's default themes and combine with 
+
+// var overrides
+$primary: #008cff;
+$danger: #ff4136;
+
+
+// Required
+
+@import "../../../node_modules/bootstrap/scss/bootstrap";
+@import "../../../node_modules/bootstrap/scss/bootstrap-grid";
+@import "../../../node_modules/bootstrap/scss/bootstrap-reboot";
+@import "../../../node_modules/bootstrap/scss/bootstrap-utilities";
+
+// put custom classes and changes here
+
+
+@font-face {
+    font-family: titlefont;
+    src: url('OpenSans-Regular.ttf');
+  }
+
+.heart {
+    font-family:Calibri, 'Trebuchet MS', sans-serif;
+    color: black;
+    text-decoration-line: none;
+    -webkit-text-stroke: 2px rgb(255, 255, 255);
+}
+.heart:hover {
+    color: black;
+    text-decoration-line: none;
+}
+
+.follow {
+    border: None !important;
+}
+
+.username {
+    text-decoration-line: none;
+    color: rgb(57, 57, 57);
+}
+
+.username:hover {
+    text-decoration-line: none;
+    font-weight: bold;
+    color: white;
+}
+
+.post {
+    background-color: rgb(255, 0, 0);
+    border: 2px solid;
+    border-radius: 3px;
+    border-color: rgb(155, 155, 155);
+}
+
+.posttitlebox {
+    background-color: $primary;
+    border-bottom: 2px;
+    border-bottom-style: solid;
+    border-bottom-color: rgb(104, 104, 92);
+}
+
+.posttitle {
+    /* font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+    font-family: titlefont, Helvetica, sans-serif;
+    color: white;
+}
