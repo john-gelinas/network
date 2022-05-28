@@ -78,10 +78,13 @@ function update_likes(post_id, csrftoken) {
             likes_counter = document.querySelector(`#likes${post_id}`)
             likes_counter.innerHTML = `${totalLikes}`
             let heartsvg = document.getElementById(`heart${post_id}`)
+            var root = document.querySelector(':root');
+            var rootStyles = getComputedStyle(root);
+            var primary = rootStyles.getPropertyValue('--bs-primary');
             if (liked) {
                 heartsvg.style.color = "red"
             } else {
-                heartsvg.style.color = "#00aaff"
+                heartsvg.style.color = primary
             }
         })
 }
@@ -174,7 +177,7 @@ function editpost(event, csrftoken) {
             edited = document.getElementById(`edited${post_id}`)
             edited.innerHTML = "Edited"
         })
-        return false
+    return false
 }
 
 function toggleedit(event) {

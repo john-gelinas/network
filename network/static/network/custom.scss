@@ -2,7 +2,7 @@
 // this file is used to adjust bootstrap's default themes and combine with 
 
 // var overrides
-$primary: #008cff;
+$primary: #006aff;
 $danger: #ff4136;
 
 
@@ -23,12 +23,11 @@ $danger: #ff4136;
 
 .heart {
     font-family:Calibri, 'Trebuchet MS', sans-serif;
-    color: black;
+    color: $primary;
     text-decoration-line: none;
     -webkit-text-stroke: 2px rgb(255, 255, 255);
 }
 .heart:hover {
-    color: black;
     text-decoration-line: none;
 }
 
@@ -38,7 +37,7 @@ $danger: #ff4136;
 
 .username {
     text-decoration-line: none;
-    color: rgb(57, 57, 57);
+    color: rgb(16, 16, 16);
 }
 
 .username:hover {
@@ -48,7 +47,7 @@ $danger: #ff4136;
 }
 
 .post {
-    background-color: rgb(255, 0, 0);
+    background-color: $gray-400;
     border: 2px solid;
     border-radius: 3px;
     border-color: rgb(155, 155, 155);

@@ -9,9 +9,9 @@
   },
   "scripts": {
     "style": "sass --watch network/static/network/custom.scss network/css/stylespre.css",
-    "style-postcss": "postcss network/css/stylespre.css -u autoprefixer -o network/static/network/styles.css --watch",
+    "style-postcss": "postcss network/css/stylespre.css -u autoprefixer -o network/static/network/styles.css --watch --no-map",
     "style-min": "sass --watch network/static/network/custom.scss --style compressed network/css/stylespremin.css",
-    "style-min-postcss": "postcss network/css/stylespremin.css -u autoprefixer -o network/static/network/stylesmin.css --watch",
+    "style-min-postcss": "postcss network/css/stylespremin.css -u autoprefixer -o network/static/network/stylesmin.css --watch --no-map",
     "compile-all-styles": "npm-run-all --parallel style style-min style-postcss style-min-postcss"
   }
 }
