@@ -3,3 +3,6 @@ __pycache__
 __init__.py
 .vscode
 node_modules
+css
+styles.css
+stylesmin.css
