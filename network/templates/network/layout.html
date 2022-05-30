@@ -21,7 +21,7 @@
         {% endblock %}
     </head>
 
-    <body>
+    <body class="fullpage">
         {% csrf_token %}
         <nav class="navbar d-flex sticky-top navbar-expand-lg navbar-dark bg-dark justify-content-center">
 
@@ -34,7 +34,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse flex-grow-0" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto">
+                <ul class="navbar-nav p-2">
                     {% if user.is_authenticated %}
                     <li class="nav-item" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Your Profile">
                         <a class="nav-link" href={% url "profile" user.id %}><strong>{{ user.username }}</strong></a>
@@ -69,6 +69,20 @@
             {% block body %}
             {% endblock %}
         </div>
+
+        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+            <div class="col-md-4 d-flex align-items-center ps-4">
+                <span class="text-light">© 2022 John Gelinas</span>
+            </div>
+            <ul class="nav col-md-4 justify-content-center list-unstyled d-flex">
+                <li class="m-3"><a href="#"> <img src="{% static 'network/favicon.ico' %}"
+                            alt="Site Icon" width="30" height="30"></a></li>
+            </ul>
+            <ul class="nav col-md-4 justify-content-end list-unstyled d-flex pe-4">
+                <li class="ms-1"><a href="https://github.com/john-gelinas/"> <img src="{% static 'network/GitHub.png' %}"
+                            alt="GitHub Account" width="30" height="30"></a></li>
+            </ul>
+        </footer>
     </body>
 
 </html>

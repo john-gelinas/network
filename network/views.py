@@ -31,7 +31,7 @@ def index(request):
             return error(request, "Invalid Submission")
         else:
             posts = Post.objects.all().order_by('-time')
-            paginator = Paginator(posts, 10)  # Show 10 contacts per page.
+            paginator = Paginator(posts, 2)  # Show 10 contacts per page.
             page_number = request.GET.get(
                 'page') if request.GET.get('page') else 1
             page_obj = paginator.get_page(page_number)
@@ -245,6 +245,7 @@ def editapi(request):
     # if post request, edit post text and update time
     if request.method == "POST":
         post_text = data.get("posttext")
+        post.time = datetime.now()
         post.text = post_text
         post.edited = True
         post.save()

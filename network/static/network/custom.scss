@@ -2,10 +2,20 @@
 // this file is used to adjust bootstrap's default themes and combine with 
 
 // var overrides
-$primary: #006aff;
+$primary: rgba(125, 174, 252, 0.308);
 $danger: #ff4136;
-
-
+$custom-bg-color: #4a4a4a;
+$card-border-radius: 20px;
+// $card-border-color: rgb(255, 255, 255);
+$header-font-size: 1.0rem;
+$card-cap-bg: $primary;
+$pagination-color: rgb(32, 32, 32);
+$pagination-focus-color: black;
+$pagination-active-color: white;
+$pagination-active-bg: gray;
+$pagination-disabled-color: rgb(183, 183, 183);
+// $card-bg: rgb(241, 241, 241);
+// $card-border-color: rgb(129, 129, 129);
 // Required
 
 @import "../../../node_modules/bootstrap/scss/bootstrap";
@@ -17,26 +27,57 @@ $danger: #ff4136;
 
 
 @font-face {
-    font-family: titlefont;
+    font-family: likefont;
     src: url('OpenSans-Regular.ttf');
-  }
+}
 
 .heart {
-    font-family:Calibri, 'Trebuchet MS', sans-serif;
-    color: $primary;
+    // font-family: likefont, 'Trebuchet MS', sans-serif;
+    font-size: $header-font-size + 1rem;
+    color: $card-cap-bg;
     text-decoration-line: none;
-    -webkit-text-stroke: 2px rgb(255, 255, 255);
+    -webkit-text-stroke: 2px $dark;
 }
+
 .heart:hover {
     text-decoration-line: none;
+    color: $gray-400;
+    cursor: pointer;
 }
 
 .follow {
     border: None !important;
 }
 
+.profilename {
+    color: $light;
+}
+
+.followtext {
+    color: $light;
+}
+
+.narrow {
+    width: auto;
+}
+
+.likes {
+    font-family: likefont, Helvetica, sans-serif;
+    font-size: $header-font-size;
+}
+
+.edited {
+    font-style: italic;
+    font-size: $header-font-size;
+}
+
+.fullpage {
+    background-color: $custom-bg-color;
+}
+
 .username {
     text-decoration-line: none;
+    font-size: $header-font-size;
     color: rgb(16, 16, 16);
 }
 
@@ -46,22 +87,22 @@ $danger: #ff4136;
     color: white;
 }
 
-.post {
-    background-color: $gray-400;
-    border: 2px solid;
-    border-radius: 3px;
-    border-color: rgb(155, 155, 155);
-}
+// .post {
+//     // background-color: $light;
+//     // border: 2px solid;
+//     // border-radius: 3px;
+//     // border-color: rgb(155, 155, 155);
+// }
 
-.posttitlebox {
-    background-color: $primary;
-    border-bottom: 2px;
-    border-bottom-style: solid;
-    border-bottom-color: rgb(104, 104, 92);
-}
+// .posttitlebox {
+//     // background-color: $light;
+//     // border-bottom: 2px;
+//     // border-bottom-style: solid;
+//     // border-bottom-color: rgb(104, 104, 92);
+// }
 
 .posttitle {
-    /* font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
-    font-family: titlefont, Helvetica, sans-serif;
-    color: white;
+    border-bottom: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: rgb(122, 122, 122);
 }

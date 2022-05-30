@@ -78,13 +78,11 @@ function update_likes(post_id, csrftoken) {
             likes_counter = document.querySelector(`#likes${post_id}`)
             likes_counter.innerHTML = `${totalLikes}`
             let heartsvg = document.getElementById(`heart${post_id}`)
-            var root = document.querySelector(':root');
-            var rootStyles = getComputedStyle(root);
-            var primary = rootStyles.getPropertyValue('--bs-primary');
+            const heartcolor = document.querySelector('.card-header').style.backgroundColor
             if (liked) {
                 heartsvg.style.color = "red"
             } else {
-                heartsvg.style.color = primary
+                heartsvg.style.color = heartcolor
             }
         })
 }

@@ -15,9 +15,9 @@
     <p class="m-0 fst-italic">Head back to the <a href="/">homepage</a></p>
 </div>
 {% endif %}
-<div class="p-2 dark">
+<div class="p-2 page">
     <div class="d-flex justify-content-center">
-        <a class="btn btn-outline-secondary m-2" href={% url "newpost" %}>New Post</a>
+        <a class="btn btn-outline-light m-2" href={% url "newpost" %}>New Post</a>
     </div>
     <div class="profilediv d-flex flex-column align-items-center">
         {% if profile %}
@@ -39,36 +39,42 @@
     </div>
 
     {% for post in page_obj %}
-    <div id="{{ post.id }}" class="post m-2">
-        <div class="posttitlebox">
-            <h1 class="display-6 posttitle ps-2 m-0 d-flex align-items-center">{{ post.title }}<span class="h1 m-0"> <a
-                        href="#" id="heart{{ post.id }}" class="heart p-2">&hearts;</a><span
-                        class="align-middle h5">Likes:</span><span class="align-middle m-2 h5" id="likes{{ post.id }}"
-                        class="likes align-middle h5"></span></span><span class="lead ps-2 pt-2 align-bottom"
-                    style="font-size: 20px"><a class="username align-bottom" href={% url "profile" post.user.id %}>
-                        @{{ post.user }}</a></span></h1>
-
+    <div id="{{ post.id }}" class="post card m-2">
+        <div class="card-header ">
+            <div class="posttitle d-flex flex-row align-items-center">
+                <span class="card-title display-6 m-0">{{ post.title }}</span>
+                <a id="heart{{ post.id }}" class="heart m-2">&hearts;</a>
+                {% if post.user.id == user.id %}
+                <button id="edit{{ post.id }}" class="editbutton ms-auto btn btn-outline-secondary m-1">Edit</button>
+                <button id="delete{{ post.id }}" class="deletebutton btn btn-outline-secondary m-1">Delete</button>
+                {% endif %}
+            </div>
+            <a class="username align-middle" href={% url "profile" post.user.id %}>
+                @{{ post.user }}</a>
+            <span class="align-middle likes">Likes:</span>
+            <span class="align-middle likes" id="likes{{ post.id }}" class="likes align-middle"></span>
         </div>
         <div class="m-2">
-            <h5 id="posttext{{post.id}}">{{ post.text }}</h5>
-            <h6 id="edited{{ post.id }}" style="font-style: italic">{% if post.edited %} Edited{% endif %}</h6>
+            <div class="h5 ps-2 m-0" id="posttext{{post.id}}">{{ post.text }}</div>
             {% if post.user.id == user.id %}
-            <button id="edit{{ post.id }}" class="editbutton btn btn-outline-secondary p-2">Edit</button>
-            <button id="delete{{ post.id }}" class="deletebutton btn btn-outline-secondary p-2">Delete</button>
             <form id="editform{{ post.id }}" class="editform p-2" style="display: none">
                 <textarea class="form-control mb-1" id="posteditfield{{post.id}}">{{ post.text }}</textarea>
                 <button type="submit" id="postbutton{{ post.id }}"
                     class="postbutton btn btn-outline-secondary">Save</button>
             </form>
-
             {% endif %}
-            <h6>{{ post.time }}</h5>
+        </div>
+        <div class="card-footer m-0 text-muted">
+            {% if post.edited %}
+            <span id="edited{{ post.id }}" class="edited">Edited: </span>
+            {% endif %}
+            {{ post.time }}
         </div>
     </div>
     {% endfor %}
 
     {% comment %} Pagination {% endcomment %}
-    <nav aria-label="Page navigation example">
+    <nav aria-label="Page navigation">
         <ol class="pagination justify-content-center">
             {% comment %} page before {% endcomment %}
             {% if page_obj.has_previous %}
@@ -117,11 +123,11 @@
             {% endif %}
 
         </ol>
+
     </nav>
 
 </div>
-{% endblock %}
+{% endblock %}{% block script %}
 
-{% block script %}
 <script src="{% static 'network/post.js' %}"></script>
 {% endblock %}
