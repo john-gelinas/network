@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "..\\..\\..\\heroku-test\\python-getting-started"
 		}
 	],
 	"settings": {}
