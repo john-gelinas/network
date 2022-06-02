@@ -4,3 +4,4 @@ __init__.py
 .vscode
 node_modules
 css
+.env
