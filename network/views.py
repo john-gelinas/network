@@ -24,20 +24,19 @@ class PostForm(forms.Form):
 
 
 def index(request):
-    return ("hi")
-    # if request.user.is_authenticated:
-    #     if request.method == "POST":
-    #         # throw error if post
-    #         return error(request, "Invalid Submission")
-    #     else:
-    #         posts = Post.objects.all().order_by('-time')
-    #         paginator = Paginator(posts, 10)  # Show 10 contacts per page.
-    #         page_number = request.GET.get(
-    #             'page') if request.GET.get('page') else 1
-    #         page_obj = paginator.get_page(page_number)
-    #         return render(request, "network/index.html", {'page_obj': page_obj})
-    # else:
-    #     return redirect(reverse("login"))
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            # throw error if post
+            return error(request, "Invalid Submission")
+        else:
+            posts = Post.objects.all().order_by('-time')
+            paginator = Paginator(posts, 10)  # Show 10 contacts per page.
+            page_number = request.GET.get(
+                'page') if request.GET.get('page') else 1
+            page_obj = paginator.get_page(page_number)
+            return render(request, "network/index.html", {'page_obj': page_obj})
+    else:
+        return redirect(reverse("login"))
 
 
 def login_view(request):
