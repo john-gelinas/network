@@ -11,16 +11,13 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-import environ
+# import environ
 
 import dj_database_url
 import dotenv
 
 import django_heroku
 
-# Initialise environment variable
-env = environ.Env()
-environ.Env.read_env()
 
 
 
@@ -28,15 +25,21 @@ environ.Env.read_env()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 dotenv_file = os.path.join(BASE_DIR, ".env")
-print(dotenv_file)
+# print(dotenv_file)
 if os.path.isfile(dotenv_file):
-    DATABASE_URL="sqlite:///db.sqlite3"
+    dotenv.load_dotenv()
+
+# Initialise environment variable
+# env = environ.Env()
+# environ.Env.read_env()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+# print(os.environ)
+SECRET_KEY = os.environ['SECRET_KEY']
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
