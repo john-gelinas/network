@@ -1,6 +1,6 @@
 networkvenv
 __pycache__
-__init__.py
+# __init__.py
 .vscode
 node_modules
 css-pre
