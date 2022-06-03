@@ -1,1 +1,2 @@
-web: python manage.py runserver "0.0.0.0:5050" 
+release: python manage.py migrate
+web: gunicorn network.wsgi
