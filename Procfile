@@ -1,2 +1,2 @@
 release: python manage.py migrate
-web: gunicorn jng-network.wsgi
+web: gunicorn network.wsgi
