@@ -37,7 +37,7 @@ if os.path.isfile(dotenv_file):
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-print(os.environ)
+# print(os.environ)
 SECRET_KEY = os.environ['SECRET_KEY']
 
 
@@ -105,7 +105,7 @@ WSGI_APPLICATION = 'project4.wsgi.application'
 # }
 
 DATABASES = {}
-DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 AUTH_USER_MODEL = "network.User"
 
