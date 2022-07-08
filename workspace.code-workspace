@@ -1,11 +1,13 @@
 {
 	"folders": [
 		{
-			"path": "."
-		},
-		{
-			"path": "..\\..\\..\\heroku-test\\python-getting-started"
+			"path": "..\\..\\..\\react tutorial\\react-task-tracker"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"emmet.preferences": {
+			
+		
+		}
+	}
 }
